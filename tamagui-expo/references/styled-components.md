@@ -8,7 +8,7 @@
 5. [accept for Custom Props](#accept)
 6. [Pseudo Styles](#pseudo-styles)
 7. [Platform-Specific Styles](#platform-styles)
-8. [Composition Patterns](#composition-patterns)
+8. [Composition Patterns](#composition-patterns) (incl. `createStyledContext`)
 9. [Performance Considerations](#performance)
 
 ---
@@ -307,7 +307,113 @@ This is cleaner than `Platform.select()` because the compiler can still optimize
 
 ## Composition Patterns
 
-### Compound components
+### Compound components with `createStyledContext`
+
+When building compound components (a parent with coordinated children like `Card` with `Card.Title`, `Card.Description`), use `createStyledContext` to share variant values across parts. This is the idiomatic Tamagui approach — it lets a parent's `size` (or any variant) automatically cascade to children without manual prop drilling.
+
+```tsx
+import { styled, View, Text, Image, createStyledContext } from 'tamagui'
+import { withStaticProperties } from '@tamagui/helpers'
+
+// 1. Create a typed context with default values for shared variants
+const CardContext = createStyledContext({
+  size: 'md' as 'sm' | 'md' | 'lg',
+})
+
+// 2. Each part references the same context
+const CardFrame = styled(View, {
+  name: 'Card',
+  context: CardContext,
+  backgroundColor: '$surface',
+  borderRadius: '$3',
+  borderWidth: 1,
+  borderColor: '$border',
+
+  variants: {
+    size: {
+      sm: { padding: '$2', gap: '$1' },
+      md: { padding: '$4', gap: '$2' },
+      lg: { padding: '$6', gap: '$3' },
+    },
+  } as const,
+
+  defaultVariants: {
+    size: 'md',
+  },
+})
+
+const CardImage = styled(Image, {
+  name: 'CardImage',
+  context: CardContext,
+  borderTopLeftRadius: '$3',
+  borderTopRightRadius: '$3',
+  width: '100%',
+
+  variants: {
+    size: {
+      sm: { aspectRatio: 2 },
+      md: { aspectRatio: 16 / 9 },
+      lg: { aspectRatio: 4 / 3 },
+    },
+  } as const,
+})
+
+const CardTitle = styled(Text, {
+  name: 'CardTitle',
+  context: CardContext,
+  fontWeight: '600',
+  color: '$color',
+
+  variants: {
+    size: {
+      sm: { fontSize: '$4' },
+      md: { fontSize: '$6' },
+      lg: { fontSize: '$7' },
+    },
+  } as const,
+})
+
+const CardDescription = styled(Text, {
+  name: 'CardDescription',
+  context: CardContext,
+  color: '$colorSecondary',
+
+  variants: {
+    size: {
+      sm: { fontSize: '$2' },
+      md: { fontSize: '$3' },
+      lg: { fontSize: '$4' },
+    },
+  } as const,
+})
+
+// 3. Compose with withStaticProperties
+export const Card = withStaticProperties(CardFrame, {
+  Image: CardImage,
+  Title: CardTitle,
+  Description: CardDescription,
+})
+```
+
+Usage — setting `size` on the parent cascades to all children automatically:
+
+```tsx
+<Card size="lg">
+  <Card.Image source={birdPhoto} />
+  <Card.Title>Laughing Kookaburra</Card.Title>
+  <Card.Description>Dacelo novaeguineae</Card.Description>
+</Card>
+```
+
+**Key points:**
+- Every part that should inherit shared variants needs `context: CardContext`
+- The variant names must match across parts (all use `size` here)
+- `withStaticProperties` is a Tamagui helper that attaches sub-components while preserving types — use it instead of `Object.assign`
+- You can share multiple variants through a single context (e.g., `size` and `variant`)
+
+### Simple compound components (no shared state)
+
+If children don't need to respond to parent variants — they're just namespaced for API ergonomics — you can skip the context and use a plain `Object.assign`:
 
 ```tsx
 const CardFrame = styled(View, {
@@ -319,14 +425,6 @@ const CardFrame = styled(View, {
   borderColor: '$border',
 })
 
-const CardImage = styled(Image, {
-  name: 'CardImage',
-  borderTopLeftRadius: '$3',
-  borderTopRightRadius: '$3',
-  width: '100%',
-  aspectRatio: 16 / 9,
-})
-
 const CardTitle = styled(Text, {
   name: 'CardTitle',
   fontSize: '$6',
@@ -334,26 +432,12 @@ const CardTitle = styled(Text, {
   color: '$color',
 })
 
-const CardDescription = styled(Text, {
-  name: 'CardDescription',
-  fontSize: '$3',
-  color: '$colorSecondary',
-})
-
-// Export as compound component
 export const Card = Object.assign(CardFrame, {
-  Image: CardImage,
   Title: CardTitle,
-  Description: CardDescription,
 })
-
-// Usage:
-<Card>
-  <Card.Image source={birdPhoto} />
-  <Card.Title>Laughing Kookaburra</Card.Title>
-  <Card.Description>Dacelo novaeguineae</Card.Description>
-</Card>
 ```
+
+Use `createStyledContext` when variants need to cascade; use `Object.assign` when they don't.
 
 ### Extending existing styled components
 

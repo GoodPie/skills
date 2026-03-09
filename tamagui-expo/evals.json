@@ -16,7 +16,13 @@
     {
       "id": 3,
       "prompt": "Build a SightingCard component for the BirdUp birding app. It should show a bird photo (16:9), common name, scientific name in italics, location, time ago, and optional chips for endemic/rare status. Needs to work in both light and dark mode. Use Tamagui styled components and follow the design system.",
-      "expected_output": "A compound Card component using Tamagui styled() with proper token references, Card.Image/Card.Title etc. pattern, dark mode support via theme values (not conditional colors), pressStyle for tap feedback, and correct typography tokens from the design spec.",
+      "expected_output": "A compound Card component using createStyledContext so size cascades from Card to its children, withStaticProperties for the Card.Image/Card.Title API, dark mode support via theme values (not conditional colors), pressStyle for tap feedback, and correct typography tokens from the design spec.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Build a ListItem compound component for BirdUp that has ListItem.Icon, ListItem.Title, ListItem.Subtitle, and ListItem.Trailing. It needs sm, md, and lg size variants where the icon size, text sizes, and padding all scale together. Use createStyledContext so setting size on the parent cascades to all children.",
+      "expected_output": "A compound ListItem using createStyledContext with a size variant that cascades to all children. Each sub-part (Icon, Title, Subtitle, Trailing) should reference the shared context and have matching size variants. Uses withStaticProperties for the compound API. Proper token usage throughout.",
       "files": []
     }
   ]

@@ -2,13 +2,14 @@
 
 ## Table of Contents
 1. [Tokens vs Themes](#tokens-vs-themes)
-2. [Creating Tokens](#creating-tokens)
-3. [Creating Themes](#creating-themes)
-4. [Sub-Themes](#sub-themes)
-5. [Dark Mode](#dark-mode)
-6. [Theme Provider Setup](#theme-provider)
-7. [useTheme Hook](#use-theme)
-8. [Dynamic Theming Patterns](#dynamic-theming)
+2. [The 12-Step Color Scale](#12-step-color-scale)
+3. [Creating Tokens](#creating-tokens)
+4. [Creating Themes](#creating-themes)
+5. [Sub-Themes](#sub-themes)
+6. [Dark Mode](#dark-mode)
+7. [Theme Provider Setup](#theme-provider)
+8. [useTheme Hook](#use-theme)
+9. [Dynamic Theming Patterns](#dynamic-theming)
 
 ---
 
@@ -28,6 +29,25 @@ This distinction is fundamental:
 - `$brand` = '#2E6B4F' in light, '#4EA87A' in dark
 
 **Rule of thumb:** If a value changes between light/dark mode (or any other theme), it's a theme value. If it's the same everywhere, it's a token.
+
+---
+
+## The 12-Step Color Scale
+
+Tamagui's default themes (and the Radix convention they're based on) organize each color into a 12-step scale with well-defined semantic roles. When you see theme values like `$color1` through `$color12`, this is what they mean:
+
+| Steps | Role | Example usage |
+|-------|------|---------------|
+| 1–2 | **Backgrounds** | App background, subtle surface fills |
+| 3–4 | **Interactive surfaces** | Card backgrounds, hover/press fills |
+| 5–6 | **Borders & separators** | Input borders, dividers, subtle outlines |
+| 7–8 | **Interaction states** | Hover borders, active outlines, focus rings |
+| 9–10 | **Solid fills** | Primary button backgrounds, badges, indicators |
+| 11–12 | **Text** | Secondary text (11), primary/high-contrast text (12) |
+
+This convention is useful because it gives every color a consistent visual hierarchy. A `$blue5` is always a border-weight blue, a `$blue9` is always a solid fill blue, regardless of light/dark mode — the actual hex values change between themes, but the *role* stays the same.
+
+**When to use this:** If you're working with Tamagui's built-in color sub-themes (blue, red, green, etc. from `defaultConfig`), reference the step numbers to pick the right shade for the job. If you're defining a fully custom palette, you don't have to follow the 12-step convention, but it's a solid mental model for organizing color roles — especially if you want your custom themes to interop cleanly with Tamagui's built-in components.
 
 ---
 

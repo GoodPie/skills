@@ -67,9 +67,13 @@ Since this is native-only, pick one:
 | Driver | Package | Best for |
 |--------|---------|----------|
 | React Native Animated | `@tamagui/config/v5-rn` | Simple, zero extra deps |
-| Reanimated | `@tamagui/config/v5-reanimated` | Best native perf, spring physics |
+| Reanimated | `@tamagui/config/v5-reanimated` | Best native perf, spring physics, gesture-driven animations |
+| Motion | `@tamagui/animations-motion` | Simpler spring physics API, good for basic enter/exit transitions |
 
-If the project already has `react-native-reanimated` installed (check `package.json`), use the reanimated driver. Otherwise default to `v5-rn` to avoid adding a native dependency.
+**How to choose:**
+- If the project already has `react-native-reanimated` installed (check `package.json`), use the Reanimated driver — it's the most capable on native and handles complex gesture-driven animations well.
+- If you want spring physics for enter/exit animations but don't need Reanimated's full power, the Motion driver offers a lighter-weight API with sensible spring defaults.
+- Otherwise, default to `v5-rn` (React Native Animated) to avoid adding a native dependency.
 
 Import the default config from the chosen driver entry point:
 
@@ -77,6 +81,18 @@ Import the default config from the chosen driver entry point:
 import { defaultConfig } from '@tamagui/config/v5-reanimated'
 // or
 import { defaultConfig } from '@tamagui/config/v5-rn'
+```
+
+For the Motion driver, install separately and configure animations:
+
+```ts
+import { createAnimations } from '@tamagui/animations-motion'
+
+const animations = createAnimations({
+  fast: { type: 'spring', damping: 20, mass: 1.2, stiffness: 250 },
+  medium: { type: 'spring', damping: 15, mass: 0.9, stiffness: 150 },
+  slow: { type: 'spring', damping: 20, stiffness: 60 },
+})
 ```
 
 ---
@@ -129,6 +145,14 @@ import { defaultConfig } from '@tamagui/config/v5-rn'
      },
    })
    ```
+
+---
+
+## Compound Components with `createStyledContext`
+
+When building compound components (a parent with coordinated sub-parts), use `createStyledContext` to share variant values across parts — this is how you make a parent's `size` automatically cascade to all children without prop drilling. See `references/styled-components.md` for the full pattern with code examples.
+
+Quick mental model: create a typed context → give each `styled()` part `context: MyContext` → variants with matching names inherit automatically → compose with `withStaticProperties` from `@tamagui/helpers`.
 
 ---
 
