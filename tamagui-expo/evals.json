@@ -1,0 +1,23 @@
+{
+  "skill_name": "tamagui-expo",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Set up Tamagui from scratch in this Expo project. The project already has react-native-reanimated installed. Create the tamagui.config.ts and update babel.config.js. Use the design system from docs/DESIGN_SYSTEM.md for the tokens and themes — don't just use the defaults.",
+      "expected_output": "A tamagui.config.ts that imports from @tamagui/config/v5-reanimated, creates custom tokens matching the BirdUp design system (warm neutrals, 8px grid spacing, Inter font scale), light and dark themes with true black dark mode, and proper TypeScript declarations. babel.config.js updated with @tamagui/babel-plugin.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Create a reusable Button component using Tamagui's styled() function for the BirdUp app. It needs primary, secondary, and destructive variants, three sizes (sm, md, lg), a disabled state, and a loading state. Follow the design system spec in docs/DESIGN_SYSTEM.md.",
+      "expected_output": "A styled Button component with variant/size/disabled/loading variants, pressStyle for interaction feedback, proper token usage ($brand, $space, etc.), the name property set for sub-theme support, and fullWidth option. Should use Tamagui patterns (not TouchableOpacity).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Build a SightingCard component for the BirdUp birding app. It should show a bird photo (16:9), common name, scientific name in italics, location, time ago, and optional chips for endemic/rare status. Needs to work in both light and dark mode. Use Tamagui styled components and follow the design system.",
+      "expected_output": "A compound Card component using Tamagui styled() with proper token references, Card.Image/Card.Title etc. pattern, dark mode support via theme values (not conditional colors), pressStyle for tap feedback, and correct typography tokens from the design spec.",
+      "files": []
+    }
+  ]
+}
