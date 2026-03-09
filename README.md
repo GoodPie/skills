@@ -4,9 +4,9 @@ A collection of [Claude Code skills](https://docs.anthropic.com/en/docs/claude-c
 
 ## Available Skills
 
-| Skill | Description |
-|-------|-------------|
-| [tamagui-expo](./tamagui-expo/) | Expert guide for building Tamagui-styled React Native components in Expo projects. Covers `styled()`, tokens, themes, variants, babel plugin setup, and design system translation. |
+| Skill | Description | Install |
+|-------|-------------|---------|
+| [tamagui-expo](./tamagui-expo/) | Expert guide for building Tamagui-styled React Native components in Expo projects. Covers `styled()`, tokens, themes, variants, babel plugin setup, and design system translation. | `npx skills add goodpie/skills/tamagui-expo` |
 
 ## Skill Structure
 
